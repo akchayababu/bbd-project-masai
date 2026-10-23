@@ -1,0 +1,443 @@
+QUESTION NO:1
+ANS:
+select
+  o.order_id,
+  o.customer_id,
+  o.item,
+  o.amount
+  from orders as o
+  where o.status='pending'
+  order by o.order_id asc;
+OUTPUT:
++----------+-------------+-------------------+--------+
+| order_id | customer_id | item              | amount |
++----------+-------------+-------------------+--------+
+|     1001 |          10 | Bluetooth Speaker |   NULL |
+|     1002 |          16 | Smart Watch       |   4500 |
+|     1004 |          19 | Cotton Kurta      |   2800 |
+|     1010 |          19 | Wireless Earbuds  |   NULL |
+|     1033 |          18 | Denim Jacket      |   2500 |
+|     1035 |           5 | Bluetooth Speaker |   2800 |
+|     1036 |          22 | Denim Jacket      |   5000 |
+|     1037 |           3 | Bedsheet Set      |   3800 |
+|     1042 |          14 | Table Lamp        |   1100 |
+|     1044 |          10 | Running Shoes     |   3600 |
+|     1052 |          15 | Smart Watch       |  13500 |
+|     1057 |           4 | Bluetooth Speaker |   2800 |
+|     1058 |          13 | Bedsheet Set      |   1900 |
+|     1063 |          10 | Air Fryer         |   5200 |
+|     1064 |          20 | Bluetooth Speaker |   NULL |
+|     1068 |          23 | Air Fryer         |   5200 |
+|     1071 |          22 | Air Fryer         |   5200 |
+|     1075 |           4 | Running Shoes     |   3600 |
+|     1078 |           3 | Cotton Kurta      |   1400 |
++----------+-------------+-------------------+--------+
+QUESTION NO:2
+select
+  o.order_id,
+  o.customer_id,
+  o.item,
+  o.status
+  from orders as o
+  where o.amount IS NULL
+  order by o.order_id asc;
+OUTPUT:
++----------+-------------+-------------------+---------+
+| order_id | customer_id | item              | status  |
++----------+-------------+-------------------+---------+
+|     1001 |          10 | Bluetooth Speaker | pending |
+|     1010 |          19 | Wireless Earbuds  | pending |
+|     1064 |          20 | Bluetooth Speaker | pending |
++----------+-------------+-------------------+---------+
+QUESTION NO:3
+ANS:
+select
+  o.order_id,
+  o.customer_id,
+  o.item,
+  o.amount
+  from orders as o
+  where o.status ='completed'
+  order by o.amount DESC , o.order_id 
+  asc
+  limit 5 ;
+OUTPUT:
++----------+-------------+-------------+--------+
+| order_id | customer_id | item        | amount |
++----------+-------------+-------------+--------+
+|     1061 |          16 | Air Fryer   |  15600 |
+|     1065 |          22 | Air Fryer   |  15600 |
+|     1069 |          15 | Air Fryer   |  15600 |
+|     1077 |           3 | Air Fryer   |  15600 |
+|     1006 |           5 | Smart Watch |  13500 |
++----------+-------------+-------------+--------+
+QUESTION NO:4
+ANS:select
+  c.customer_id,
+  c.first_name,
+  c.last_name,
+  c.region,
+  c.age
+  from customers as c
+  where c.region IN ('North', 'West')
+  and c.age between 25 and 40
+  order by c.age asc,c.customer_id asc;
+
+OUTPUT:
++-------------+------------+-----------+--------+------+
+| customer_id | first_name | last_name | region | age  |
++-------------+------------+-----------+--------+------+
+|          24 | Reena      | Kulkarni  | West   |   25 |
+|           8 | Divya      | Gupta     | West   |   26 |
+|          17 | Farhan     | Shah      | North  |   27 |
+|           1 | aarav      | Sharma    | North  |   28 |
+|          16 | Nisha      | Mishra    | West   |   36 |
+|           5 |   Vikram   | Singh     | North  |   37 |
+|          12 | Pooja      | Menon     | West   |   39 |
+|          21 | Manoj      | Desai     | North  |   40 |
++-------------+------------+-----------+--------+------+
+QUESTION NO:5
+ANS:
+ select
+  count(*) as total_orders,
+  sum(o.amount) as total_revenue,
+  min(o.amount) as min_orders_value,
+  max(o.amount) as max_orders_value
+  from orders as o
+  where o.status='completed';
+OUTPUT:
++--------------+---------------+------------------+------------------+
+| total_orders | total_revenue | min_orders_value | max_orders_value |
++--------------+---------------+------------------+------------------+
+|           63 |        346200 |             1100 |            15600 |
++--------------+---------------+------------------+------------------+
+QUESTION NO:6
+ANS:
+select
+  o.status,
+  count(*) as number_of_orders,
+  sum(o.amount) as total_amount
+  from orders as o
+  group by o.status
+  order by number_of_orders desc;
+OUTPUT:
++-----------+------------------+--------------+
+| status    | number_of_orders | total_amount |
++-----------+------------------+--------------+
+| completed |               63 |       346200 |
+| pending   |               19 |        64900 |
+| disputed  |                8 |        73200 |
++-----------+------------------+--------------+
+
+QUESTION NO:7
+ANS:
+select
+  o.item,
+  count(*) as number_of_orders,
+  sum(o.amount) as revenue
+  from orders as o
+  where o.status='completed'
+  group by o.item
+  having sum(o.amount) > 20000
+  order by revenue desc;
+OUTPUT:
++------------------+------------------+---------+
+| item             | number_of_orders | revenue |
++------------------+------------------+---------+
+| Air Fryer        |                9 |  104000 |
+| Smart Watch      |                9 |   67500 |
+| Wireless Earbuds |               11 |   60800 |
+| Running Shoes    |                8 |   43200 |
++------------------+------------------+---------+
+QUESTION NO:8
+ANS:
+select
+  c.region,
+  count(*) as number_of_customers,
+  avg(c.age) as average_age,
+  min(c.age) as min_age,
+  max(c.age) as max_age
+  from customers as c
+  group by c.region
+  order by c.region asc;
+OUTPUT:
++--------+---------------------+-------------+---------+---------+
+| region | number_of_customers | average_age | min_age | max_age |
++--------+---------------------+-------------+---------+---------+
+| East   |                   6 |     34.0000 |      29 |      41 |
+| North  |                   6 |     37.5000 |      27 |      48 |
+| South  |                   6 |     36.3333 |      24 |      52 |
+| West   |                   6 |     28.5000 |      22 |      39 |
++--------+---------------------+-------------+---------+---------+
+QUESTION NO:9
+ANS:
+select
+  o.order_id,
+  o.order_month as order_month,
+  c.first_name,
+  c.last_name,
+  c.region,
+  r.rep_name,
+  o.item,
+  o.quantity,
+  o.amount,
+  o.status
+  from orders as O
+  join customers as c
+  on o.customer_id = c.customer_id
+  join reps as r
+  on c.rep_id = r.rep_id
+  order by o.order_id asc;
+OUTPUT:
++----------+-------------+------------+-----------+--------+---------------+-------------------+----------+--------+-----------+
+| order_id | order_month | first_name | last_name | region | rep_name      | item              | quantity | amount | status    |
++----------+-------------+------------+-----------+--------+---------------+-------------------+----------+--------+-----------+
+|     1001 | 2026-09     | MEERA      |   Patil   | South  | Kavya Nair    | Bluetooth Speaker |        2 |   NULL | pending   |
+|     1002 | 2026-09     | Nisha      | Mishra    | West   | Neha Kulkarni | Smart Watch       |        1 |   4500 | pending   |
+|     1003 | 2026-09     | Lakshmi    | Kapoor    | South  | Kavya Nair    | Air Fryer         |        2 |  10400 | disputed  |
+|     1004 | 2026-09     | Gaurav     | Yadav     | East   | Sanjay Roy    | Cotton Kurta      |        2 |   2800 | pending   |
+|     1005 | 2026-09     | Tanvi      | Thakur    | South  | Kavya Nair    | Table Lamp        |        1 |   1100 | completed |
+|     1006 | 2026-09     | Vikram     | Singh     | North  | Arjun Mehta   | Smart Watch       |        3 |  13500 | completed |
+|     1007 | 2026-09     | Tanvi      | Thakur    | South  | Kavya Nair    | Bedsheet Set      |        1 |   1900 | completed |
+|     1008 | 2026-09     | Sneha      | Das       | West   | Neha Kulkarni | Wireless Earbuds  |        2 |   6400 | completed |
+|     1009 | 2026-09     | RAHUL      | VERMA     | East   | Sanjay Roy    | Bedsheet Set      |        1 |   1900 | completed |
+|     1010 | 2026-09     | Gaurav     | Yadav     | East   | Sanjay Roy    | Wireless Earbuds  |        1 |   NULL | pending   |
+|     1011 | 2026-09     | Isha       | Pillai    | West   | Neha Kulkarni | Air Fryer         |        3 |  15600 | disputed  |
+|     1012 | 2026-09     | Sneha      | Das       | West   | Neha Kulkarni | Running Shoes     |        1 |   3600 | completed |
+|     1013 | 2026-09     | Harsh      | Chopra    | East   | Sanjay Roy    | Smart Watch       |        2 |   9000 | disputed  |
+|     1014 | 2026-09     | Aditya     | Rao       | East   | Sanjay Roy    | Smart Watch       |        1 |   4500 | completed |
+|     1015 | 2026-09     | Lakshmi    | Kapoor    | South  | Kavya Nair    | Smart Watch       |        2 |   9000 | completed |
+|     1016 | 2026-09     | Pooja      | Menon     | West   | Neha Kulkarni | Denim Jacket      |        3 |   7500 | completed |
+|     1017 | 2026-09     | Vikram     | Singh     | North  | Arjun Mehta   | Wireless Earbuds  |        1 |   3200 | completed |
+|     1018 | 2026-09     | Manoj      | Desai     | North  | Arjun Mehta   | Bedsheet Set      |        2 |   3800 | completed |
+|     1019 | 2026-09     | Vikram     | Singh     | North  | Arjun Mehta   | Running Shoes     |        2 |   7200 | completed |
+|     1020 | 2026-09     | Tanvi      | Thakur    | South  | Kavya Nair    | Wireless Earbuds  |        2 |   6400 | completed |
+|     1021 | 2026-09     | Manoj      | Desai     | North  | Arjun Mehta   | Air Fryer         |        2 |  10400 | completed |
+|     1022 | 2026-09     | Vikram     | Singh     | North  | Arjun Mehta   | Air Fryer         |        2 |  10400 | completed |
+|     1023 | 2026-09     | Manoj      | Desai     | North  | Arjun Mehta   | Running Shoes     |        1 |   3600 | completed |
+|     1024 | 2026-09     | Priya      | iyer      | South  | Kavya Nair    | Cotton Kurta      |        1 |   1400 | completed |
+|     1025 | 2026-09     | Divya      | Gupta     | West   | Neha Kulkarni | Table Lamp        |        1 |   1100 | completed |
+|     1026 | 2026-09     | Vikram     | Singh     | North  | Arjun Mehta   | Cotton Kurta      |        1 |   1400 | completed |
+|     1027 | 2026-10     | aarav      | Sharma    | North  | Arjun Mehta   | Smart Watch       |        1 |   4500 | completed |
+|     1028 | 2026-10     | Swati      | Banerjee  | South  | Kavya Nair    | Wireless Earbuds  |        1 |   3200 | completed |
+|     1029 | 2026-10     | Aditya     | Rao       | East   | Sanjay Roy    | Denim Jacket      |        2 |   5000 | completed |
+|     1030 | 2026-10     | Lakshmi    | Kapoor    | South  | Kavya Nair    | Denim Jacket      |        2 |   5000 | completed |
+|     1031 | 2026-10     | Isha       | Pillai    | West   | Neha Kulkarni | Denim Jacket      |        2 |   5000 | disputed  |
+|     1032 | 2026-10     | karthik    | nair      | East   | Sanjay Roy    | Table Lamp        |        2 |   2200 | completed |
+|     1033 | 2026-10     | Swati      | Banerjee  | South  | Kavya Nair    | Denim Jacket      |        1 |   2500 | pending   |
+|     1034 | 2026-10     | Divya      | Gupta     | West   | Neha Kulkarni | Running Shoes     |        2 |   7200 | completed |
+|     1035 | 2026-10     | Vikram     | Singh     | North  | Arjun Mehta   | Bluetooth Speaker |        1 |   2800 | pending   |
+|     1036 | 2026-10     | Tanvi      | Thakur    | South  | Kavya Nair    | Denim Jacket      |        2 |   5000 | pending   |
+|     1037 | 2026-10     | RAHUL      | VERMA     | East   | Sanjay Roy    | Bedsheet Set      |        2 |   3800 | pending   |
+|     1038 | 2026-10     | RAHUL      | VERMA     | East   | Sanjay Roy    | Cotton Kurta      |        2 |   2800 | completed |
+|     1039 | 2026-10     | RAHUL      | VERMA     | East   | Sanjay Roy    | Table Lamp        |        2 |   2200 | completed |
+|     1040 | 2026-10     | aarav      | Sharma    | North  | Arjun Mehta   | Smart Watch       |        3 |  13500 | completed |
+|     1041 | 2026-10     | Divya      | Gupta     | West   | Neha Kulkarni | Bluetooth Speaker |        1 |   2800 | completed |
+|     1042 | 2026-10     | Lakshmi    | Kapoor    | South  | Kavya Nair    | Table Lamp        |        1 |   1100 | pending   |
+|     1043 | 2026-10     | Rohit      | Khan      | North  | Arjun Mehta   | Bluetooth Speaker |        1 |   2800 | completed |
+|     1044 | 2026-10     | MEERA      |   Patil   | South  | Kavya Nair    | Running Shoes     |        1 |   3600 | pending   |
+|     1045 | 2026-10     | Nisha      | Mishra    | West   | Neha Kulkarni | Cotton Kurta      |        3 |   4200 | completed |
+|     1046 | 2026-10     | Vikram     | Singh     | North  | Arjun Mehta   | Bedsheet Set      |        1 |   1900 | completed |
+|     1047 | 2026-10     | Isha       | Pillai    | West   | Neha Kulkarni | Wireless Earbuds  |        3 |   9600 | disputed  |
+|     1048 | 2026-10     | Priya      | iyer      | South  | Kavya Nair    | Table Lamp        |        1 |   1100 | completed |
+|     1049 | 2026-10     | aarav      | Sharma    | North  | Arjun Mehta   | Smart Watch       |        2 |   9000 | completed |
+|     1050 | 2026-10     | Pooja      | Menon     | West   | Neha Kulkarni | Running Shoes     |        1 |   3600 | completed |
+|     1051 | 2026-10     | Sneha      | Das       | West   | Neha Kulkarni | Cotton Kurta      |        2 |   2800 | completed |
+|     1052 | 2026-10     | Aditya     | Rao       | East   | Sanjay Roy    | Smart Watch       |        3 |  13500 | pending   |
+|     1053 | 2026-10     | Tanvi      | Thakur    | South  | Kavya Nair    | Air Fryer         |        1 |   5200 | completed |
+|     1054 | 2026-10     | Manoj      | Desai     | North  | Arjun Mehta   | Wireless Earbuds  |        3 |   9600 | completed |
+|     1055 | 2026-10     | Swati      | Banerjee  | South  | Kavya Nair    | Smart Watch       |        1 |   4500 | completed |
+|     1056 | 2026-10     | Pooja      | Menon     | West   | Neha Kulkarni | Wireless Earbuds  |        1 |   3200 | disputed  |
+|     1057 | 2026-11     | Sneha      | Das       | West   | Neha Kulkarni | Bluetooth Speaker |        1 |   2800 | pending   |
+|     1058 | 2026-11     | suresh     | BOSE      | North  | Arjun Mehta   | Bedsheet Set      |        1 |   1900 | pending   |
+|     1059 | 2026-11     | Priya      | iyer      | South  | Kavya Nair    | Bluetooth Speaker |        2 |   5600 | completed |
+|     1060 | 2026-11     | suresh     | BOSE      | North  | Arjun Mehta   | Wireless Earbuds  |        3 |   9600 | disputed  |
+|     1061 | 2026-11     | Nisha      | Mishra    | West   | Neha Kulkarni | Air Fryer         |        3 |  15600 | completed |
+|     1062 | 2026-11     | Isha       | Pillai    | West   | Neha Kulkarni | Wireless Earbuds  |        2 |   6400 | completed |
+|     1063 | 2026-11     | MEERA      |   Patil   | South  | Kavya Nair    | Air Fryer         |        1 |   5200 | pending   |
+|     1064 | 2026-11     | Isha       | Pillai    | West   | Neha Kulkarni | Bluetooth Speaker |        1 |   NULL | pending   |
+|     1065 | 2026-11     | Tanvi      | Thakur    | South  | Kavya Nair    | Air Fryer         |        3 |  15600 | completed |
+|     1066 | 2026-11     | suresh     | BOSE      | North  | Arjun Mehta   | Wireless Earbuds  |        1 |   3200 | completed |
+|     1067 | 2026-11     | Priya      | iyer      | South  | Kavya Nair    | Air Fryer         |        1 |   5200 | completed |
+|     1068 | 2026-11     | Harsh      | Chopra    | East   | Sanjay Roy    | Air Fryer         |        1 |   5200 | pending   |
+|     1069 | 2026-11     | Aditya     | Rao       | East   | Sanjay Roy    | Air Fryer         |        3 |  15600 | completed |
+|     1070 | 2026-11     | MEERA      |   Patil   | South  | Kavya Nair    | Table Lamp        |        2 |   2200 | completed |
+|     1071 | 2026-11     | Tanvi      | Thakur    | South  | Kavya Nair    | Air Fryer         |        1 |   5200 | pending   |
+|     1072 | 2026-11     | Isha       | Pillai    | West   | Neha Kulkarni | Bedsheet Set      |        1 |   1900 | completed |
+|     1073 | 2026-11     | Harsh      | Chopra    | East   | Sanjay Roy    | Smart Watch       |        1 |   4500 | completed |
+|     1074 | 2026-11     | Nisha      | Mishra    | West   | Neha Kulkarni | Running Shoes     |        2 |   7200 | completed |
+|     1075 | 2026-11     | Sneha      | Das       | West   | Neha Kulkarni | Running Shoes     |        1 |   3600 | pending   |
+|     1076 | 2026-11     | Gaurav     | Yadav     | East   | Sanjay Roy    | Cotton Kurta      |        2 |   2800 | completed |
+|     1077 | 2026-11     | RAHUL      | VERMA     | East   | Sanjay Roy    | Air Fryer         |        3 |  15600 | completed |
+|     1078 | 2026-11     | RAHUL      | VERMA     | East   | Sanjay Roy    | Cotton Kurta      |        1 |   1400 | pending   |
+|     1079 | 2026-11     | Sneha      | Das       | West   | Neha Kulkarni | Cotton Kurta      |        1 |   1400 | completed |
+|     1080 | 2026-11     | Harsh      | Chopra    | East   | Sanjay Roy    | Bluetooth Speaker |        1 |   2800 | completed |
+|     1081 | 2026-11     | Vikram     | Singh     | North  | Arjun Mehta   | Wireless Earbuds  |        2 |   6400 | completed |
+|     1082 | 2026-11     | karthik    | nair      | East   | Sanjay Roy    | Running Shoes     |        3 |  10800 | disputed  |
+|     1083 | 2026-11     | Lakshmi    | Kapoor    | South  | Kavya Nair    | Air Fryer         |        2 |  10400 | completed |
+|     1084 | 2026-11     | Lakshmi    | Kapoor    | South  | Kavya Nair    | Running Shoes     |        1 |   3600 | completed |
+|     1085 | 2026-11     | aarav      | Sharma    | North  | Arjun Mehta   | Wireless Earbuds  |        1 |   3200 | completed |
+|     1086 | 2026-11     | Manoj      | Desai     | North  | Arjun Mehta   | Running Shoes     |        2 |   7200 | completed |
+|     1087 | 2026-11     | Manoj      | Desai     | North  | Arjun Mehta   | Smart Watch       |        1 |   4500 | completed |
+|     1088 | 2026-11     | Sneha      | Das       | West   | Neha Kulkarni | Wireless Earbuds  |        1 |   3200 | completed |
+|     1089 | 2026-11     | MEERA      |   Patil   | South  | Kavya Nair    | Table Lamp        |        1 |   1100 | completed |
+|     1090 | 2026-11     | karthik    | nair      | East   | Sanjay Roy    | Wireless Earbuds  |        3 |   9600 | completed |
++----------+-------------+------------+-----------+--------+---------------+-------------------+----------+--------+-----------+
+QUESTION NO:10
+ANS:
+ select
+ c.customer_id,
+ c.first_name,
+ c.last_name,
+ c.region
+ from customers as c
+ left join orders as o
+ on  c.customer_id = o.order_id
+ where o.order_id is NULL
+ order by c. customer_id asc;
+OUTPUT:
++-------------+------------+-----------+--------+
+| customer_id | first_name | last_name | region |
++-------------+------------+-----------+--------+
+|           1 | aarav      | Sharma    | North  |
+|           2 | Priya      | iyer      | South  |
+|           3 | RAHUL      | VERMA     | East   |
+|           4 | Sneha      | Das       | West   |
+|           5 | Vikram     | Singh     | North  |
+|           6 | Ananya     | Reddy     | South  |
+|           7 | karthik    | nair      | East   |
+|           8 | Divya      | Gupta     | West   |
+|           9 | Rohit      | Khan      | North  |
+|          10 | MEERA      | Patil     | South  |
+|          11 | Imran      | Joshi     | East   |
+|          12 | Pooja      | Menon     | West   |
+|          13 | suresh     | BOSE      | North  |
+|          14 | Lakshmi    | Kapoor    | South  |
+|          15 | Aditya     | Rao       | East   |
+|          16 | Nisha      | Mishra    | West   |
+|          17 | Farhan     | Shah      | North  |
+|          18 | Swati      | Banerjee  | South  |
+|          19 | Gaurav     | Yadav     | East   |
+|          20 | Isha       | Pillai    | West   |
+|          21 | Manoj      | Desai     | North  |
+|          22 | Tanvi      | Thakur    | South  |
+|          23 | Harsh      | Chopra    | East   |
+|          24 | Reena      | Kulkarni  | West   |
++-------------+------------+-----------+--------+
+QUESTION NO:11
+ANS:
+c.region,
+ o.order_month as order_month,
+ count(*) as number_of_orders,
+ count(distinct c.customer_id) as number_of_customers,
+ sum(o.amount) as total_revenue,
+ avg(o.amount) as average_revenue
+ from orders as o
+ join customers as c
+ on o.customer_id = c.customer_id
+ where o.status='completed'
+ group by 
+ c.region,
+ o.order_month 
+ order by 
+ c.region asc,
+ o.order_month asc;
+OUTPUT:
++--------+-------------+------------------+---------------------+---------------+-----------------+
+| region | order_month | number_of_orders | number_of_customers | total_revenue | average_revenue |
++--------+-------------+------------------+---------------------+---------------+-----------------+
+| East   | 2026-09     |                2 |                   2 |          6400 |       3200.0000 |
+| East   | 2026-10     |                4 |                   3 |         12200 |       3050.0000 |
+| East   | 2026-11     |                6 |                   5 |         50900 |       8483.3333 |
+| North  | 2026-09     |                8 |                   2 |         53500 |       6687.5000 |
+| North  | 2026-10     |                6 |                   4 |         41300 |       6883.3333 |
+| North  | 2026-11     |                5 |                   4 |         24500 |       4900.0000 |
+| South  | 2026-09     |                5 |                   3 |         19800 |       3960.0000 |
+| South  | 2026-10     |                5 |                   4 |         19000 |       3800.0000 |
+| South  | 2026-11     |                7 |                   4 |         43700 |       6242.8571 |
+| West   | 2026-09     |                4 |                   3 |         18600 |       4650.0000 |
+| West   | 2026-10     |                5 |                   4 |         20600 |       4120.0000 |
+| West   | 2026-11     |                6 |                   3 |         35700 |       5950.0000 |
++--------+-------------+------------------+---------------------+---------------+-----------------+ 
+QUESTION NO:12
+ANS:
+ select
+o.item,
+sum(o.amount) as total_revenue,
+case
+  when sum(o.amount) >= 60000
+  then'high'
+  when sum(o.amount) >= 15000
+  then 'medium'
+else
+'Low'
+end as contribution_tier
+from orders as o
+where o.status='completed'
+group by o.item
+order by total_revenue desc;
+OUTPUT:
++-------------------+---------------+-------------------+
+| item              | total_revenue | contribution_tier |
++-------------------+---------------+-------------------+
+| Air Fryer         |        104000 | high              |
+| Smart Watch       |         67500 | high              |
+| Wireless Earbuds  |         60800 | high              |
+| Running Shoes     |         43200 | medium            |
+| Denim Jacket      |         17500 | medium            |
+| Cotton Kurta      |         16800 | medium            |
+| Bluetooth Speaker |         14000 | Low               |
+| Bedsheet Set      |         11400 | Low               |
+| Table Lamp        |         11000 | Low               |
++-------------------+---------------+-------------------+
+QUESTION NO:13
+ANS:
+SELECT
+ r.rep_name,
+ o.order_month as order_month,
+ r.monthly_target,
+ sum(o.amount) as revenue,
+ case
+  when sum(o.amount) < r.monthly_target
+  then 'below target'
+  when sum(o.amount) < r.monthly_target * 1.1
+  then 'On target'
+ else'Above target'
+end as performance_tier
+from reps as r
+join customers as c
+on r.rep_id= c.rep_id
+join orders as o
+on c.customer_id = o.customer_id
+where o.status='completed'
+group by 
+r.rep_id,
+r.rep_name,
+r.monthly_target,
+o.order_month
+order by
+r.rep_name asc,
+o.order_month asc;
+OUTPUT:
++---------------+-------------+----------------+---------+------------------+
+| rep_name      | order_month | monthly_target | revenue | performance_tier |
++---------------+-------------+----------------+---------+------------------+
+| Arjun Mehta   | 2026-09     |          40000 |   53500 | Above target     |
+| Arjun Mehta   | 2026-10     |          40000 |   41300 | On target        |
+| Arjun Mehta   | 2026-11     |          40000 |   24500 | below target     |
+| Kavya Nair    | 2026-09     |          20000 |   19800 | below target     |
+| Kavya Nair    | 2026-10     |          20000 |   19000 | below target     |
+| Kavya Nair    | 2026-11     |          20000 |   43700 | Above target     |
+| Neha Kulkarni | 2026-09     |          20000 |   18600 | below target     |
+| Neha Kulkarni | 2026-10     |          20000 |   20600 | On target        |
+| Neha Kulkarni | 2026-11     |          20000 |   35700 | Above target     |
+| Sanjay Roy    | 2026-09     |          12000 |    6400 | below target     |
+| Sanjay Roy    | 2026-10     |          12000 |   12200 | On target        |
+| Sanjay Roy    | 2026-11     |          12000 |   50900 | Above target     |
++---------------+-------------+----------------+---------+------------------+
+
+
+
+
+
+
