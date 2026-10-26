@@ -20,3 +20,18 @@ Below target,On target,above target.
 *sort by representative and order month in ascending order.
 5.format
 return raw SQL only,with brief inline comments explaining the query.do not include explanatory paragraphs outside the SQL code.
+SELECT region_name, SUM(total_sales) AS sales
+FROM sales
+WHERE SUM(total_sales) > 80000
+GROUP BY region_name
+ORDER BY sales DESC;
+I inspected the query against the actual database schema and identified four defects.
+
+No.| Defect| Classification| Correct Fix
+1| The query references a "sales" table that does not exist in the provided schema.| Fake method/function| Use the actual "customers" and "orders" tables and join them using "customer_id".
+2| The query uses "region_name" and "total_sales", which are not columns in the provided schema.| Logic error| Use "customers.region" and "orders.amount".
+3| The query places "SUM(total_sales) > 80000" in the WHERE clause.| Logic error| Use "HAVING SUM(o.amount) > 80000" after grouping.
+4| The assistant claims North's revenue grew 38% month over month without supporting evidence.| Phantom statistic| Calculate the actual percentage change using North's September and October revenue from Q11.
+
+Conclusion
+The original query should not be accepted without correction. The table and column references must match the actual schema, the aggregate filter must use HAVING, and the claimed 38% growth must be verified against the actual monthly revenue data.
